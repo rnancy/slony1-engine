@@ -271,7 +271,6 @@ int
 sched_wait_time(SlonConn * conn, int condition, int msec)
 {
 	struct timeval *tv = &(conn->timeout);
-
 	/*
 	 * Calculate the end-time of the desired timeout.
 	 */
@@ -283,7 +282,7 @@ sched_wait_time(SlonConn * conn, int condition, int msec)
 	/*
 	 * Let sched_wait_conn() do the rest.
 	 */
-	return sched_wait_conn(conn, condition | SCHED_WAIT_TIMEOUT);
+	return sched_wait_conn(conn, condition | SCHED_WAIT_TIMEOUT); 
 }
 
 

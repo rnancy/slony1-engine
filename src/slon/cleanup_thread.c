@@ -34,7 +34,7 @@
 int			vac_frequency = SLON_VACUUM_FREQUENCY;
 char	   *cleanup_interval;
 
-static int	vac_bias = 0;
+/*static int	vac_bias = 0;*/
 static unsigned long earliest_xid = 0;
 static unsigned long get_earliest_xid(PGconn *dbconn);
 
@@ -66,6 +66,7 @@ cleanupThread_main( /* @unused@ */ void *dummy)
 	char	   *vacuum_action;
 	int			ntuples;
         int              cleanup_interval_second;  /*rnancy: value of the cleanup_interval in second*/
+        int vac_bias = 0;
 
 	slon_log(SLON_CONFIG, "cleanupThread: thread starts\n");
 	/*
@@ -104,7 +105,7 @@ cleanupThread_main( /* @unused@ */ void *dummy)
                                                  "cleanupThread: \"%s\" - %s",
                                                  dstring_data(&query_cleanup_interval_second), PQresultErrorMessage(res3));
                         }
-                cleanup_interval_second = PQgetvalue(res3, 0, 0);
+                cleanup_interval_second = atoi(PQgetvalue(res3, 0, 0));
                 
                 slon_log(SLON_DEBUG1, "cleanupThread: Cleanup interval is : %ds\n", cleanup_interval_second); 
 
@@ -139,7 +140,10 @@ cleanupThread_main( /* @unused@ */ void *dummy)
 	 * cluster will run into conflicts due to trying to vacuum common tables *
 	 * such as pg_listener concurrently
 	 */
-	while (sched_wait_time(conn, SCHED_WAIT_SOCK_READ, cleanup_interval_second * 1000 + vac_bias + (rand() % cleanup_interval_second) == SCHED_STATUS_OK))
+	 while (sched_wait_time(conn, 
+                                 SCHED_WAIT_SOCK_READ, 
+                                 cleanup_interval_second * 1000 + vac_bias + (rand() % cleanup_interval_second)) == SCHED_STATUS_OK)
+                                 
 	{
 		/*
 		 * Call the stored procedure cleanupEvent()
