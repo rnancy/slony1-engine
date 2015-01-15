@@ -34,7 +34,6 @@
 int			vac_frequency = SLON_VACUUM_FREQUENCY;
 char	   *cleanup_interval;
 
-/*static int	vac_bias = 0;*/
 static unsigned long earliest_xid = 0;
 static unsigned long get_earliest_xid(PGconn *dbconn);
 
@@ -50,7 +49,7 @@ cleanupThread_main( /* @unused@ */ void *dummy)
 {
 	SlonConn   *conn;
 	SlonDString query_baseclean;
-        SlonDString query_cleanup_interval_second;
+	SlonDString query_cleanup_interval_second;
 	SlonDString query2;
 	SlonDString query_pertbl;
 
@@ -65,8 +64,8 @@ cleanupThread_main( /* @unused@ */ void *dummy)
 	int			vac_enable = SLON_VACUUM_FREQUENCY;
 	char	   *vacuum_action;
 	int			ntuples;
-        int              cleanup_interval_second;  /*rnancy: value of the cleanup_interval in second*/
-        int vac_bias = 0;
+	int              cleanup_interval_second;
+	int vac_bias = 0;
 
 	slon_log(SLON_CONFIG, "cleanupThread: thread starts\n");
 	/*
@@ -104,6 +103,7 @@ cleanupThread_main( /* @unused@ */ void *dummy)
                                 slon_log(SLON_ERROR,
                                                  "cleanupThread: \"%s\" - %s",
                                                  dstring_data(&query_cleanup_interval_second), PQresultErrorMessage(res3));
+                                slon_retry();
                         }
                 cleanup_interval_second = atoi(PQgetvalue(res3, 0, 0));
                 
