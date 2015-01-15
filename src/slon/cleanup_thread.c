@@ -85,7 +85,7 @@ cleanupThread_main( /* @unused@ */ void *dummy)
 	dbconn = conn->dbconn;
         monitor_state("local_cleanup", 0, conn->conn_pid, "thread main loop", 0, "n/a");
         /*
-         *rnancy : Want the vacuum time bias to be 10% of the cleanup interval
+         *Want the vacuum time bias to be 10% of the cleanup interval
          */
         if (vac_bias == 0)
         {
