@@ -56,7 +56,7 @@ cleanupThread_main( /* @unused@ */ void *dummy)
 	PGconn	   *dbconn;
 	PGresult   *res;
 	PGresult   *res2;
-        PGresult   *res3;
+	PGresult   *res3;
 	struct timeval tv_start;
 	struct timeval tv_end;
 	int			t;
